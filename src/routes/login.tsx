@@ -50,13 +50,7 @@ function LoginPage() {
         <Card className="w-full max-w-md p-8">
           <h1 className="font-serif text-3xl font-semibold">Sign in</h1>
           <p className="mt-1 text-sm text-muted-foreground">Welcome back to Lois Pastries.</p>
-          <Button type="button" onClick={onGoogle} variant="outline" className="mt-6 w-full">
-            Continue with Google
-          </Button>
-          <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
-            <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-          </div>
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
