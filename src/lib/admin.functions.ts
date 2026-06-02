@@ -68,6 +68,50 @@ export const listAllProductsAdmin = createServerFn({ method: "GET" })
     return data ?? [];
   });
 
+export const listCategoriesAdmin = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userEmail);
+    const { data } = await supabaseAdmin
+      .from("categories")
+      .select("*")
+      .order("name", { ascending: true });
+    return data ?? [];
+  });
+
+export const upsertCategory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({
+      id: z.string().uuid().optional(),
+      name: z.string().min(1).max(120),
+      description: z.string().max(1000).optional().nullable(),
+      image_url: z.string().url().nullable().optional(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userEmail);
+    if (data.id) {
+      const { error } = await supabaseAdmin.from("categories").update(data).eq("id", data.id);
+      if (error) throw new Error(error.message);
+    } else {
+      const { id: _o, ...ins } = data;
+      const { error } = await supabaseAdmin.from("categories").insert(ins);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+export const deleteCategory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userEmail);
+    const { error } = await supabaseAdmin.from("categories").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 const ProductInput = z.object({
   id: z.string().uuid().optional(),
   category_id: z.string().uuid().nullable().optional(),
