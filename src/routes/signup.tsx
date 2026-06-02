@@ -36,7 +36,7 @@ function SignupPage() {
       setLoading(false);
       return toast.error(error.message);
     }
-    // Upsert profile row
+    // Upsert profile row + ensure 'customer' role exists
     if (data.user) {
       await supabase.from("profiles").upsert({
         id: data.user.id,
@@ -45,18 +45,16 @@ function SignupPage() {
         phone,
         role: "customer",
       });
+      await supabase
+        .from("roles")
+        .upsert(
+          { email: email.toLowerCase(), role: "customer" },
+          { onConflict: "email,role" },
+        );
     }
     setLoading(false);
     toast.success("Account created. Check your email to confirm.");
     navigate({ to: "/login" });
-  };
-
-  const onGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/account` },
-    });
-    if (error) toast.error(error.message);
   };
 
   return (
@@ -66,13 +64,7 @@ function SignupPage() {
         <Card className="w-full max-w-md p-8">
           <h1 className="font-serif text-3xl font-semibold">Create your account</h1>
           <p className="mt-1 text-sm text-muted-foreground">Join Lois Pastries.</p>
-          <Button type="button" onClick={onGoogle} variant="outline" className="mt-6 w-full">
-            Continue with Google
-          </Button>
-          <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
-            <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-          </div>
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
               <Label htmlFor="name">Full name</Label>
               <Input id="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />

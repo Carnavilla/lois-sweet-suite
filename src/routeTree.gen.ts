@@ -29,6 +29,7 @@ import { Route as AdminTrainingRouteImport } from './routes/admin.training'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminCustomCakesRouteImport } from './routes/admin.custom-cakes'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as ApiPublicPaystackWebhookRouteImport } from './routes/api/public/paystack.webhook'
 
 const TrainingRoute = TrainingRouteImport.update({
@@ -131,6 +132,11 @@ const AdminCustomCakesRoute = AdminCustomCakesRouteImport.update({
   path: '/custom-cakes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicPaystackWebhookRoute =
   ApiPublicPaystackWebhookRouteImport.update({
     id: '/api/public/paystack/webhook',
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/training': typeof TrainingRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/custom-cakes': typeof AdminCustomCakesRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/products': typeof AdminProductsRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/training': typeof TrainingRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/custom-cakes': typeof AdminCustomCakesRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/products': typeof AdminProductsRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/training': typeof TrainingRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/custom-cakes': typeof AdminCustomCakesRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/products': typeof AdminProductsRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/training'
+    | '/admin/categories'
     | '/admin/custom-cakes'
     | '/admin/orders'
     | '/admin/products'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/training'
+    | '/admin/categories'
     | '/admin/custom-cakes'
     | '/admin/orders'
     | '/admin/products'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/training'
+    | '/admin/categories'
     | '/admin/custom-cakes'
     | '/admin/orders'
     | '/admin/products'
@@ -437,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCustomCakesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/paystack/webhook': {
       id: '/api/public/paystack/webhook'
       path: '/api/public/paystack/webhook'
@@ -448,6 +467,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminCustomCakesRoute: typeof AdminCustomCakesRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminProductsRoute: typeof AdminProductsRoute
@@ -457,6 +477,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCategoriesRoute: AdminCategoriesRoute,
   AdminCustomCakesRoute: AdminCustomCakesRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminProductsRoute: AdminProductsRoute,

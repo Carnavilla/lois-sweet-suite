@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { listAllProductsAdmin, upsertProduct, deleteProduct } from "@/lib/admin.functions";
+import { listAllProductsAdmin, upsertProduct, deleteProduct, listCategoriesAdmin } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { ProductImage } from "@/components/ProductImage";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/products")({ component: AdminProducts });
@@ -17,8 +18,10 @@ function AdminProducts() {
   const list = useServerFn(listAllProductsAdmin);
   const upsert = useServerFn(upsertProduct);
   const del = useServerFn(deleteProduct);
+  const listCats = useServerFn(listCategoriesAdmin);
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({ queryKey: ["admin-products"], queryFn: () => list() });
+  const { data: cats } = useQuery({ queryKey: ["admin-categories"], queryFn: () => listCats() });
   const [editing, setEditing] = useState<any | null>(null);
 
   const save = async (e: React.FormEvent) => {
@@ -26,6 +29,7 @@ function AdminProducts() {
     try {
       await upsert({ data: {
         id: editing.id,
+        category_id: editing.category_id || null,
         name: editing.name,
         description: editing.description ?? "",
         price: Number(editing.price),
@@ -62,6 +66,19 @@ function AdminProducts() {
           <form onSubmit={save} className="grid gap-4 md:grid-cols-2">
             <div><Label>Name</Label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} required /></div>
             <div><Label>SKU</Label><Input value={editing.sku ?? ""} onChange={(e) => setEditing({ ...editing, sku: e.target.value })} /></div>
+            <div>
+              <Label>Category</Label>
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                value={editing.category_id ?? ""}
+                onChange={(e) => setEditing({ ...editing, category_id: e.target.value || null })}
+              >
+                <option value="">— None —</option>
+                {(cats ?? []).map((c: any) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
             <div><Label>Price (₦)</Label><Input type="number" step="0.01" value={editing.price} onChange={(e) => setEditing({ ...editing, price: e.target.value })} required /></div>
             <div><Label>Stock</Label><Input type="number" value={editing.stock ?? 0} onChange={(e) => setEditing({ ...editing, stock: e.target.value })} /></div>
             <div><Label>Serves</Label><Input value={editing.serves ?? ""} onChange={(e) => setEditing({ ...editing, serves: e.target.value })} /></div>
@@ -92,7 +109,17 @@ function AdminProducts() {
             {isLoading && <tr><td colSpan={5} className="p-4">Loading…</td></tr>}
             {(data ?? []).map((p: any) => (
               <tr key={p.id} className="border-t">
-                <td className="p-3">{p.name}</td>
+                <td className="p-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 overflow-hidden rounded bg-muted">
+                      <ProductImage src={p.image_url} alt={p.name} />
+                    </div>
+                    <div>
+                      <p>{p.name}</p>
+                      {p.categories?.name && <p className="text-xs text-muted-foreground">{p.categories.name}</p>}
+                    </div>
+                  </div>
+                </td>
                 <td className="p-3">₦{Number(p.price).toLocaleString()}</td>
                 <td className="p-3">{p.stock}</td>
                 <td className="p-3">{p.is_available ? "Yes" : "No"}</td>

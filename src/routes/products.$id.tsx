@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
+import { ProductImage } from "@/components/ProductImage";
 import { addToCart } from "@/lib/cart";
 import { toast } from "sonner";
 
@@ -31,7 +32,7 @@ function ProductPage() {
       <SiteHeader />
       <section className="container mx-auto grid gap-8 px-4 py-12 md:grid-cols-2">
         <div className="aspect-square overflow-hidden rounded-xl bg-muted">
-          {data.image_url && <img src={data.image_url} alt={data.name} className="h-full w-full object-cover" />}
+          <ProductImage src={data.image_url} alt={data.name} />
         </div>
         <div>
           <h1 className="font-serif text-4xl font-semibold">{data.name}</h1>

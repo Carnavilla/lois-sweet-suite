@@ -27,6 +27,7 @@ function AdminLayout() {
           <p className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">Admin</p>
           <Link to="/admin" className="block rounded px-3 py-2 hover:bg-muted">Dashboard</Link>
           <Link to="/admin/products" className="block rounded px-3 py-2 hover:bg-muted">Products</Link>
+          <Link to="/admin/categories" className="block rounded px-3 py-2 hover:bg-muted">Categories</Link>
           <Link to="/admin/orders" className="block rounded px-3 py-2 hover:bg-muted">Orders</Link>
           <Link to="/admin/custom-cakes" className="block rounded px-3 py-2 hover:bg-muted">Custom Cakes</Link>
           <Link to="/admin/training" className="block rounded px-3 py-2 hover:bg-muted">Training</Link>
