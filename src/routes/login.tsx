@@ -35,14 +35,6 @@ function LoginPage() {
     navigate({ to: "/account" });
   };
 
-  const onGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/account` },
-    });
-    if (error) toast.error(error.message);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
