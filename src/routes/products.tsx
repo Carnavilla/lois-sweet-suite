@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,6 +17,16 @@ export const Route = createFileRoute("/products")({
 });
 
 function ProductsPage() {
+  const location = useLocation();
+
+  if (location.pathname !== "/products") {
+    return <Outlet />;
+  }
+
+  return <ProductsCatalog />;
+}
+
+function ProductsCatalog() {
   const { category: initialCategory } = Route.useSearch();
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState<string>(initialCategory ?? "");
@@ -62,8 +72,6 @@ function ProductsPage() {
     return list;
   }, [data, search, categoryId, sort]);
 
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -108,7 +116,10 @@ function ProductsPage() {
               <Card
                 key={p.id}
                 className="cursor-pointer overflow-hidden transition hover:shadow-lg"
-                onClick={() => navigate({ to: "/products/$id", params: { id: p.id } })}
+                onClick={() => {
+                  console.log("CARD CLICKED", p.id);
+                  window.location.href = `/products/${p.id}`;
+                }}
               >
                 <div className="aspect-square bg-muted">
                   <ProductImage src={p.image_url} alt={p.name} />
