@@ -62,6 +62,8 @@ function ProductsPage() {
     return list;
   }, [data, search, categoryId, sort]);
 
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -103,17 +105,19 @@ function ProductsPage() {
         ) : (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p: any) => (
-              <Link key={p.id} to="/products/$id" params={{ id: p.id }}>
-                <Card className="overflow-hidden transition hover:shadow-lg">
-                  <div className="aspect-square bg-muted">
-                    <ProductImage src={p.image_url} alt={p.name} />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-medium">{p.name}</h3>
-                    <p className="mt-1 text-sm text-primary">₦{Number(p.price).toLocaleString()}</p>
-                  </div>
-                </Card>
-              </Link>
+              <Card
+                key={p.id}
+                className="cursor-pointer overflow-hidden transition hover:shadow-lg"
+                onClick={() => navigate({ to: "/products/$id", params: { id: p.id } })}
+              >
+                <div className="aspect-square bg-muted">
+                  <ProductImage src={p.image_url} alt={p.name} />
+                </div>
+                <div className="p-4">
+                  <h3 className="font-medium">{p.name}</h3>
+                  <p className="mt-1 text-sm text-primary">₦{Number(p.price).toLocaleString()}</p>
+                </div>
+              </Card>
             ))}
           </div>
         )}
