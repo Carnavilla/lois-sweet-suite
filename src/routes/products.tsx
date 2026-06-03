@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -62,8 +62,6 @@ function ProductsPage() {
     return list;
   }, [data, search, categoryId, sort]);
 
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -110,7 +108,7 @@ function ProductsPage() {
                 className="cursor-pointer overflow-hidden transition hover:shadow-lg"
                 onClick={() => {
                   console.log("CARD CLICKED", p.id);
-                  navigate({ to: "/products/$id", params: { id: p.id } });
+                  window.location.href = `/products/${p.id}`;
                 }}
               >
                 <div className="aspect-square bg-muted">
