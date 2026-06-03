@@ -108,7 +108,10 @@ function ProductsPage() {
               <Card
                 key={p.id}
                 className="cursor-pointer overflow-hidden transition hover:shadow-lg"
-                onClick={() => navigate({ to: "/products/$id", params: { id: p.id } })}
+                onClick={() => {
+                  console.log("CARD CLICKED", p.id);
+                  navigate({ to: "/products/$id", params: { id: p.id } });
+                }}
               >
                 <div className="aspect-square bg-muted">
                   <ProductImage src={p.image_url} alt={p.name} />
