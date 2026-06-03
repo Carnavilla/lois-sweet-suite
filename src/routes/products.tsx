@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,6 +17,16 @@ export const Route = createFileRoute("/products")({
 });
 
 function ProductsPage() {
+  const location = useLocation();
+
+  if (location.pathname !== "/products") {
+    return <Outlet />;
+  }
+
+  return <ProductsCatalog />;
+}
+
+function ProductsCatalog() {
   const { category: initialCategory } = Route.useSearch();
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState<string>(initialCategory ?? "");
