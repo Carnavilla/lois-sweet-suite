@@ -42,12 +42,38 @@ export const listAllOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context.userEmail);
-    const { data } = await supabaseAdmin
+    const { data: orders, error } = await supabaseAdmin
       .from("orders")
-      .select("*, profiles(email, full_name), order_items(*, products(name))")
+      .select("*, order_items(*, products(name))")
       .order("created_at", { ascending: false })
       .limit(200);
-    return data ?? [];
+    if (error) {
+      console.error("[listAllOrders]", error);
+      return [];
+    }
+    const list = orders ?? [];
+    // Enrich with auth user details (profiles table may be empty)
+    const userIds = Array.from(new Set(list.map((o: any) => o.user_id).filter(Boolean)));
+    const userMap = new Map<string, { email: string; full_name: string }>();
+    await Promise.all(
+      userIds.map(async (uid: string) => {
+        try {
+          const { data } = await supabaseAdmin.auth.admin.getUserById(uid);
+          if (data?.user) {
+            userMap.set(uid, {
+              email: data.user.email ?? "",
+              full_name: (data.user.user_metadata?.full_name as string) ?? "",
+            });
+          }
+        } catch (e) {
+          console.error("[listAllOrders] getUserById", uid, e);
+        }
+      }),
+    );
+    return list.map((o: any) => ({
+      ...o,
+      profiles: userMap.get(o.user_id) ?? null,
+    }));
   });
 
 export const updateOrderStatus = createServerFn({ method: "POST" })
@@ -157,22 +183,46 @@ export const listUsersWithRoles = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context.userEmail);
-    const [{ data: profiles }, { data: roles }] = await Promise.all([
-      supabaseAdmin.from("profiles").select("id, email, full_name, phone, created_at").order("created_at", { ascending: false }),
+    // Source users from auth (canonical) + roles table. profiles table may be empty.
+    const [{ data: rolesRows }, { data: profilesRows }] = await Promise.all([
       supabaseAdmin.from("roles").select("*"),
+      supabaseAdmin.from("profiles").select("id, email, full_name, phone, created_at"),
     ]);
+    const profileByEmail = new Map<string, any>();
+    for (const p of profilesRows ?? []) {
+      profileByEmail.set((p.email ?? "").toLowerCase(), p);
+    }
     const rolesByEmail = new Map<string, string[]>();
-    for (const r of roles ?? []) {
+    for (const r of rolesRows ?? []) {
       const email = (r.email ?? "").toLowerCase();
       if (!rolesByEmail.has(email)) rolesByEmail.set(email, []);
       rolesByEmail.get(email)!.push(r.role);
     }
-    return (profiles ?? []).map((p) => {
-      const lower = (p.email ?? "").toLowerCase();
+    // Page through auth users
+    const users: any[] = [];
+    let page = 1;
+    while (page < 20) {
+      const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+      if (error) { console.error("[listUsersWithRoles] listUsers", error); break; }
+      const batch = data?.users ?? [];
+      users.push(...batch);
+      if (batch.length < 200) break;
+      page += 1;
+    }
+    return users.map((u) => {
+      const lower = (u.email ?? "").toLowerCase();
+      const profile = profileByEmail.get(lower);
       const r = rolesByEmail.get(lower) ?? ["customer"];
       if (lower === SUPER_ADMIN_EMAIL && !r.includes("super_admin")) r.push("super_admin");
-      return { ...p, roles: r };
-    });
+      return {
+        id: u.id,
+        email: u.email ?? "",
+        full_name: profile?.full_name ?? (u.user_metadata?.full_name as string) ?? "",
+        phone: profile?.phone ?? (u.user_metadata?.phone as string) ?? "",
+        created_at: u.created_at,
+        roles: r,
+      };
+    }).sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
   });
 
 export const setUserRole = createServerFn({ method: "POST" })
