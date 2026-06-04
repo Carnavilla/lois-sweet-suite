@@ -26,8 +26,9 @@ export const getAdminStats = createServerFn({ method: "GET" })
       supabaseAdmin.from("custom_cake_orders").select("id", { count: "exact", head: true }),
       supabaseAdmin.from("training_registrations").select("id", { count: "exact", head: true }),
     ]);
+    const includedStatuses = new Set(["paid", "processing", "out_for_delivery", "completed"]);
     const revenue = (orders.data ?? [])
-      .filter((o) => o.status === "paid" || o.status === "completed")
+      .filter((o) => includedStatuses.has(o.status))
       .reduce((s, o) => s + Number(o.total_amount), 0);
     return {
       orderCount: orders.count ?? 0,
