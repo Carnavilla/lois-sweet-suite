@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { ensureProfile } from "@/lib/public.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +17,7 @@ export const Route = createFileRoute("/signup")({
 
 function SignupPage() {
   const navigate = useNavigate();
+  const ensureProfileFn = useServerFn(ensureProfile);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -36,21 +39,20 @@ function SignupPage() {
       setLoading(false);
       return toast.error(error.message);
     }
-    // Upsert profile row + ensure 'customer' role exists
+    // Ensure profile + customer role server-side (bypasses RLS)
     if (data.user) {
-      await supabase.from("profiles").upsert({
-        id: data.user.id,
-        email: email.toLowerCase(),
-        full_name: fullName,
-        phone,
-        role: "customer",
-      });
-      await supabase
-        .from("roles")
-        .upsert(
-          { email: email.toLowerCase(), role: "customer" },
-          { onConflict: "email,role" },
-        );
+      try {
+        await ensureProfileFn({
+          data: {
+            id: data.user.id,
+            email: email.toLowerCase(),
+            full_name: fullName,
+            phone,
+          },
+        });
+      } catch (e) {
+        console.error("ensureProfile", e);
+      }
     }
     setLoading(false);
     toast.success("Account created. Check your email to confirm.");
