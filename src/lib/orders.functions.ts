@@ -54,11 +54,21 @@ export const createOrder = createServerFn({ method: "POST" })
 export const listMyOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    const { data } = await supabase
+    const { userId } = context;
+    const { data: orders, error } = await supabaseAdmin
       .from("orders")
       .select("*, order_items(*, products(name, image_url))")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
-    return data ?? [];
+    if (error) {
+      console.error("[listMyOrders]", error);
+      // Fallback: simple select without joins
+      const { data: plain } = await supabaseAdmin
+        .from("orders")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+      return plain ?? [];
+    }
+    return orders ?? [];
   });

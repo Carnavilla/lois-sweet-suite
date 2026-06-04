@@ -9,9 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useCart, writeCart } from "@/lib/cart";
-import { supabase } from "@/integrations/supabase/client";
 import { createOrder } from "@/lib/orders.functions";
 import { initPaystackTransaction } from "@/lib/paystack.functions";
+import { listDeliveryZones } from "@/lib/public.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
@@ -25,6 +25,7 @@ function CheckoutPage() {
   const cart = useCart();
   const createOrderFn = useServerFn(createOrder);
   const initPay = useServerFn(initPaystackTransaction);
+  const fetchZones = useServerFn(listDeliveryZones);
 
   const [deliveryType, setDeliveryType] = useState<"pickup" | "delivery">("delivery");
   const [state, setState] = useState("");
@@ -39,10 +40,7 @@ function CheckoutPage() {
 
   const { data: zones } = useQuery({
     queryKey: ["delivery_zones"],
-    queryFn: async () => {
-      const { data } = await supabase.from("delivery_zones").select("*").eq("is_active", true);
-      return data ?? [];
-    },
+    queryFn: () => fetchZones(),
   });
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -80,8 +78,10 @@ function CheckoutPage() {
     }
   };
 
-  const states = Array.from(new Set((zones ?? []).map((z) => z.state)));
-  const cities = (zones ?? []).filter((z) => z.state === state).map((z) => z.city);
+  const states = Array.from(new Set((zones ?? []).map((z: any) => z.state).filter(Boolean)));
+  const cities = Array.from(
+    new Set((zones ?? []).filter((z: any) => z.state === state).map((z: any) => z.city).filter(Boolean)),
+  );
 
   return (
     <div className="min-h-screen bg-background">
