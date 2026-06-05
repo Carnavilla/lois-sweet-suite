@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { useCart, writeCart, readCart } from "@/lib/cart";
 import { Trash2 } from "lucide-react";
@@ -63,6 +64,7 @@ function CartPage() {
           </div>
         )}
       </section>
+      <SiteFooter />
     </div>
   );
 }
