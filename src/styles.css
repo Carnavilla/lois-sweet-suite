@@ -4,6 +4,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --color-brand: #d4a373;
+  --color-brand-soft: #faedcd;
+  --color-brand-gold: #e9c46a;
+  --color-brand-cream: #fff8f0;
+  --color-brand-ink: #4a2c2a;
+}
+
 /*
  * Design system definition.
  *
@@ -63,25 +73,26 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  /* Lois Pastries — warm bakery palette */
+  --background: #fff8f0;
+  --foreground: #4a2c2a;
+  --card: #ffffff;
+  --card-foreground: #4a2c2a;
+  --popover: #ffffff;
+  --popover-foreground: #4a2c2a;
+  --primary: #d4a373;
+  --primary-foreground: #ffffff;
+  --secondary: #faedcd;
+  --secondary-foreground: #4a2c2a;
+  --muted: #f5e9d3;
+  --muted-foreground: #8a6a55;
+  --accent: #e9c46a;
+  --accent-foreground: #4a2c2a;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: #ecd8b8;
+  --input: #ecd8b8;
+  --ring: #d4a373;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
