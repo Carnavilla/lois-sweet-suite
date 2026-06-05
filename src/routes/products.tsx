@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ProductImage } from "@/components/ProductImage";
@@ -115,24 +116,24 @@ function ProductsCatalog() {
             {filtered.map((p: any) => (
               <Card
                 key={p.id}
-                className="cursor-pointer overflow-hidden transition hover:shadow-lg"
+                className="group cursor-pointer overflow-hidden border-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 onClick={() => {
-                  console.log("CARD CLICKED", p.id);
                   window.location.href = `/products/${p.id}`;
                 }}
               >
-                <div className="aspect-square bg-muted">
-                  <ProductImage src={p.image_url} alt={p.name} />
+                <div className="aspect-square overflow-hidden bg-muted">
+                  <ProductImage src={p.image_url} alt={p.name} className="transition-transform duration-500 group-hover:scale-110" />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-medium">{p.name}</h3>
-                  <p className="mt-1 text-sm text-primary">₦{Number(p.price).toLocaleString()}</p>
+                <div className="p-5">
+                  <h3 className="font-serif text-lg">{p.name}</h3>
+                  <p className="mt-1 font-medium text-primary">₦{Number(p.price).toLocaleString()}</p>
                 </div>
               </Card>
             ))}
           </div>
         )}
       </section>
+      <SiteFooter />
     </div>
   );
 }
