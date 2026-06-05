@@ -9,9 +9,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-serif text-xl font-semibold">
-          <span className="inline-block h-8 w-8 rounded-full bg-primary" />
-          Lois Pastries
+        <Link to="/" className="flex items-center gap-2 font-serif text-2xl font-semibold tracking-tight">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-serif text-sm">L</span>
+          <span>Lois Pastries</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm md:flex">
           <Link to="/products" className="hover:text-primary">Shop</Link>
