@@ -14,6 +14,18 @@ export const listDeliveryZones = createServerFn({ method: "GET" }).handler(async
   return data ?? [];
 });
 
+export const listPublicTraining = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await supabaseAdmin
+    .from("training_courses")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("[listPublicTraining]", error);
+    return [];
+  }
+  return data ?? [];
+});
+
 import { z } from "zod";
 
 export const ensureProfile = createServerFn({ method: "POST" })
