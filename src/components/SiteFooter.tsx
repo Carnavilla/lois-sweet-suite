@@ -32,8 +32,8 @@ export function SiteFooter() {
         <div>
           <h4 className="font-serif text-lg">Get in touch</h4>
           <ul className="mt-4 space-y-2 text-sm opacity-90">
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> hello@loispastries.com</li>
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> +234 800 000 0000</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>hello@loispastries.com</span></li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>+234 800 000 0000</span></li>
             <li className="mt-3 flex items-center gap-3">
               <a href="#" aria-label="Instagram" className="hover:text-[var(--color-brand-gold)]"><Instagram className="h-5 w-5" /></a>
               <a href="#" aria-label="Facebook" className="hover:text-[var(--color-brand-gold)]"><Facebook className="h-5 w-5" /></a>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -86,10 +87,14 @@ function CheckoutPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <section className="container mx-auto grid gap-8 px-4 py-12 lg:grid-cols-[1fr_400px]">
-        <Card className="p-6">
-          <h1 className="font-serif text-3xl font-semibold">Checkout</h1>
-          <div className="mt-6 space-y-4">
+      <section className="container mx-auto px-4 py-12">
+        <p className="text-xs uppercase tracking-[0.25em] text-primary">Final step</p>
+        <h1 className="mt-2 font-serif text-4xl font-semibold md:text-5xl">Checkout</h1>
+      </section>
+      <section className="container mx-auto grid gap-8 px-4 pb-16 lg:grid-cols-[1fr_400px]">
+        <Card className="rounded-3xl border-0 p-8 shadow-sm">
+          <h2 className="font-serif text-2xl">Delivery details</h2>
+          <div className="mt-6 space-y-5">
             <div className="flex gap-2">
               <Button variant={deliveryType === "delivery" ? "default" : "outline"} onClick={() => setDeliveryType("delivery")}>Delivery</Button>
               <Button variant={deliveryType === "pickup" ? "default" : "outline"} onClick={() => setDeliveryType("pickup")}>Pickup</Button>
@@ -124,24 +129,26 @@ function CheckoutPage() {
             </div>
           </div>
         </Card>
-        <Card className="h-fit p-6">
-          <h2 className="font-semibold">Order summary</h2>
+        <Card className="h-fit rounded-3xl border-0 p-6 shadow-sm lg:sticky lg:top-24">
+          <h2 className="font-serif text-xl">Order summary</h2>
           <div className="mt-4 space-y-2 text-sm">
             {cart.map((i) => (
-              <div key={i.id} className="flex justify-between">
+              <div key={i.id} className="flex justify-between text-muted-foreground">
                 <span>{i.name} × {i.quantity}</span>
-                <span>₦{(i.price * i.quantity).toLocaleString()}</span>
+                <span className="text-foreground">₦{(i.price * i.quantity).toLocaleString()}</span>
               </div>
             ))}
             <div className="flex justify-between border-t pt-2"><span>Subtotal</span><span>₦{subtotal.toLocaleString()}</span></div>
             <div className="flex justify-between"><span>Delivery</span><span>₦{fee.toLocaleString()}</span></div>
-            <div className="flex justify-between border-t pt-2 text-lg font-medium"><span>Total</span><span>₦{total.toLocaleString()}</span></div>
+            <div className="flex justify-between border-t pt-3 font-serif text-xl"><span>Total</span><span className="text-primary">₦{total.toLocaleString()}</span></div>
           </div>
-          <Button className="mt-6 w-full" onClick={onPay} disabled={submitting || cart.length === 0}>
+          <Button size="lg" className="mt-6 w-full" onClick={onPay} disabled={submitting || cart.length === 0}>
             {submitting ? "Redirecting…" : "Pay with Paystack"}
           </Button>
+          <p className="mt-3 text-center text-xs text-muted-foreground">Secured by Paystack · 256-bit SSL</p>
         </Card>
       </section>
+      <SiteFooter />
     </div>
   );
 }
