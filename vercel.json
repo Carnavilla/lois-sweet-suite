@@ -1,9 +1,5 @@
 {
   "buildCommand": "bun run build",
   "installCommand": "bun install",
-  "outputDirectory": ".output/public",
-  "framework": "vite",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "outputDirectory": ".output/public"
 }
