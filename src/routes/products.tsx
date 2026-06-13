@@ -89,6 +89,7 @@ function ProductsCatalog() {
       </section>
 
       <section className="container mx-auto px-4 py-10">
+
         {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input
@@ -100,7 +101,8 @@ function ProductsCatalog() {
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+            style={{ appearance: "auto" }}
+            className="h-10 rounded-md border border-input bg-background px-3 text-sm cursor-pointer"
           >
             <option value="">All categories</option>
             {(categories ?? []).map((c: any) => (
@@ -110,7 +112,8 @@ function ProductsCatalog() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as any)}
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+            style={{ appearance: "auto" }}
+            className="h-10 rounded-md border border-input bg-background px-3 text-sm cursor-pointer"
           >
             <option value="featured">Featured</option>
             <option value="newest">Newest</option>
