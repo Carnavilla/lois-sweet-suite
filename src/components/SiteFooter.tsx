@@ -5,6 +5,7 @@ export function SiteFooter() {
   return (
     <footer className="mt-20 border-t bg-[var(--color-brand-ink)] text-[var(--color-brand-cream)]">
       <div className="container mx-auto grid gap-10 px-4 py-14 md:grid-cols-4">
+
         {/* Brand */}
         <div>
           <div className="flex items-center gap-2 font-serif text-2xl">
@@ -12,22 +13,13 @@ export function SiteFooter() {
             Lois Pastries
           </div>
           <p className="mt-4 max-w-xs text-sm opacity-80">
-            A premium Nigerian bakery crafting celebration cakes, pastries and
-            unforgettable moments — by Chef Lois Olayinka.
+            A premium Nigerian bakery crafting celebration cakes, pastries and unforgettable moments — by Chef Lois Olayinka.
           </p>
           <div className="mt-5 flex items-center gap-3">
-            
-              href="#"
-              aria-label="Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-[var(--color-brand-gold)] hover:text-[var(--color-brand-ink)]"
-            >
+            <a href="#" aria-label="Instagram" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-[var(--color-brand-gold)] hover:text-[var(--color-brand-ink)]">
               <Instagram className="h-4 w-4" />
             </a>
-            
-              href="#"
-              aria-label="Facebook"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-[var(--color-brand-gold)] hover:text-[var(--color-brand-ink)]"
-            >
+            <a href="#" aria-label="Facebook" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-[var(--color-brand-gold)] hover:text-[var(--color-brand-ink)]">
               <Facebook className="h-4 w-4" />
             </a>
           </div>
@@ -67,6 +59,7 @@ export function SiteFooter() {
             </li>
           </ul>
         </div>
+
       </div>
 
       {/* Bottom bar */}
